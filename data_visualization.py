@@ -180,10 +180,6 @@ def plot_diet_depression(df):
     plt.show()
 
 def plot_academic_pressure_vs_depression(df):
-    df['Pressure_Group'] = pd.cut(df['Academic Pressure'],
-                                 bins=[0, 1, 2, 3, 4, 5],
-                                 labels=['0-1', '2', '3', '4', '5'])
-    
     pressure_stats = df.groupby('Academic Pressure')['Depression'].value_counts(normalize=True).unstack()
 
     plt.figure(figsize=(10, 6))
@@ -211,13 +207,71 @@ def plot_academic_pressure_vs_depression(df):
     plt.tight_layout()
     plt.show()
 
+def plot_financial_stress_vs_depression(df):
+    pressure_stats = df.groupby('Financial Stress')['Depression'].value_counts(normalize=True).unstack().fillna(0)
+    print(pressure_stats)
+    plt.figure(figsize=(10, 6))
+
+    ax = pressure_stats.plot(kind='bar',
+                      stacked=False,
+                      color=['lightgreen', 'salmon'],
+                      edgecolor='black',
+                      width=0.8)
+
+    plt.title('Relationship between Financial Stress and Depression', pad=20)
+    plt.xlabel('Financial Stress Level (1-5)')
+    plt.ylabel('Proportion')
+    plt.xticks(rotation=0)
+    plt.legend(['No Depression', 'Depression'], title='Status')
+    plt.grid(axis='y', alpha=0.3)
+
+    for i, (idx, row) in enumerate(pressure_stats.iterrows()):
+        for j, value in enumerate(row):
+            plt.text(i, value, 
+                    f'{value:.0%}', 
+                    ha='center',
+                    color='black')
+
+    plt.tight_layout()
+    plt.show()
+
+def plot_work_study_hours_vs_depression(df):
+    pressure_stats = df.groupby('Work/Study Hours')['Depression'].value_counts(normalize=True).unstack().fillna(0)
+    print(pressure_stats)
+    plt.figure(figsize=(10, 6))
+
+    ax = pressure_stats.plot(kind='bar',
+                      stacked=False,
+                      color=['lightgreen', 'salmon'],
+                      edgecolor='black',
+                      width=0.8)
+
+    plt.title('Relationship between Work/Study Hours and Depression', pad=20)
+    plt.xlabel('Work/Study Hours')
+    plt.ylabel('Proportion')
+    plt.xticks(rotation=0)
+    plt.legend(['No Depression', 'Depression'], title='Status')
+    plt.grid(axis='y', alpha=0.3)
+
+    for i, (idx, row) in enumerate(pressure_stats.iterrows()):
+        for j, value in enumerate(row):
+            plt.text(i, value, 
+                    f'{value:.0%}', 
+                    ha='center',
+                    color='black')
+
+    plt.tight_layout()
+    plt.show()
+    
 def generate_graphics():
     df = load_and_prepare_data('./student_depression_dataset.csv')
-    plot_correlation_matrix(df)
-    plot_cgpa_vs_depression(df)
-    plot_academic_pressure_vs_satisfaction(df)
-    plot_depression_by_gender(df)
-    plot_suicidal_thoughts_vs_depression(df)
-    plot_sleep_depression(df)
-    plot_diet_depression(df)
-    plot_academic_pressure_vs_depression(df)
+    plot_work_study_hours_vs_depression(df)
+    #plot_financial_stress_vs_depression(df)
+    #plot_correlation_matrix(df)
+    #plot_cgpa_vs_depression(df)
+    #plot_academic_pressure_vs_satisfaction(df)
+    #plot_depression_by_gender(df)
+    #plot_suicidal_thoughts_vs_depression(df)
+    #plot_sleep_depression(df)
+    #plot_diet_depression(df)
+    #plot_academic_pressure_vs_depression(df)
