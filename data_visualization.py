@@ -263,9 +263,37 @@ def plot_work_study_hours_vs_depression(df):
     plt.tight_layout()
     plt.show()
     
+def plot_age_vs_depression(df):
+    pressure_stats = df.groupby('Age')['Depression'].value_counts(normalize=True).unstack().fillna(0)
+    print(pressure_stats)
+    plt.figure(figsize=(10, 6))
+
+    ax = pressure_stats.plot(kind='bar',
+                      stacked=False,
+                      color=['lightgreen', 'salmon'],
+                      edgecolor='black',
+                      width=0.8)
+
+    plt.title('Relationship between Age and Depression', pad=20)
+    plt.xlabel('Work/Study Hours')
+    plt.ylabel('Proportion')
+    plt.xticks(rotation=0)
+    plt.legend(['No Depression', 'Depression'], title='Status')
+    plt.grid(axis='y', alpha=0.3)
+
+    for i, (idx, row) in enumerate(pressure_stats.iterrows()):
+        for j, value in enumerate(row):
+            plt.text(i, value, 
+                    f'{value:.0%}', 
+                    ha='center',
+                    color='black')
+
+    plt.tight_layout()
+    plt.show()
+
 def generate_graphics():
     df = load_and_prepare_data('./student_depression_dataset.csv')
-    plot_work_study_hours_vs_depression(df)
+    plot_age_vs_depression(df)
     #plot_financial_stress_vs_depression(df)
     #plot_correlation_matrix(df)
     #plot_cgpa_vs_depression(df)
